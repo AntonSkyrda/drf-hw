@@ -1,8 +1,11 @@
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import OrderingFilter
 from rest_framework.generics import (
     RetrieveUpdateAPIView,
     ListCreateAPIView,
 )
 
+from pizza.filters import PizzaFilter
 from pizza.models import Pizza
 from pizza.serializers import PizzaSerializer
 
@@ -11,11 +14,11 @@ class PizzaListCreateView(ListCreateAPIView):
     queryset = Pizza.objects.all()
     serializer_class = PizzaSerializer
 
-    def get(self, request, *args, **kwargs):
-        return super().list(request, *args, **kwargs)
+    filter_backends = [DjangoFilterBackend, OrderingFilter]
+    filterset_class = PizzaFilter
 
-    def post(self, request, *args, **kwargs):
-        return super().create(request, *args, **kwargs)
+    ordering_fields = ["id", "name", "size", "price", "created_at", "updated_at"]
+    ordering = ["id"]
 
 
 class PizzaRetrieveUpdateDestroyView(RetrieveUpdateAPIView):
