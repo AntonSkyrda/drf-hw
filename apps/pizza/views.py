@@ -1,13 +1,11 @@
-from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import OrderingFilter
-from rest_framework.generics import (
-    RetrieveUpdateAPIView,
-    ListCreateAPIView,
-)
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView
 
-from pizza.filters import PizzaFilter
-from pizza.models import Pizza
-from pizza.serializers import PizzaSerializer
+from django_filters.rest_framework import DjangoFilterBackend
+
+from apps.pizza.filters import PizzaFilter
+from apps.pizza.models import Pizza
+from apps.pizza.serializers import PizzaSerializer
 
 
 class PizzaListCreateView(ListCreateAPIView):

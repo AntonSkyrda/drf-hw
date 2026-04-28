@@ -1,6 +1,6 @@
 from django_filters import rest_framework
 
-from pizza.models import Pizza
+from apps.pizza.models import Pizza
 
 
 class PizzaFilter(rest_framework.FilterSet):
