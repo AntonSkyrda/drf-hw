@@ -1,6 +1,9 @@
 from django.contrib.auth import get_user_model
+from django.db.transaction import atomic
 
 from rest_framework import serializers
+
+from core.services.email_service import EmailService
 
 from apps.user.models import UserProfile
 
@@ -44,10 +47,12 @@ class UserSerializer(serializers.ModelSerializer):
         )
         extra_kwargs = {"password": {"write_only": True}}
 
+    @atomic
     def create(self, validated_data: dict) -> User:
         profile = validated_data.pop("profile")
         user = User.objects.create_user(**validated_data)
         UserProfile.objects.create(user=user, **profile)
+        EmailService.register(user)
         return user
 
 

@@ -1,6 +1,7 @@
 from django.db import models
 
 from core.models import BaseModel
+from core.services.file_service import upload_pizza_photo
 
 
 class Pizza(BaseModel):
@@ -11,8 +12,11 @@ class Pizza(BaseModel):
     size = models.PositiveIntegerField()
     price = models.FloatField()
 
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    photo = models.ImageField(
+        upload_to=upload_pizza_photo,
+        blank=True,
+    )
+
 
     def __str__(self):
         return self.name
