@@ -1,4 +1,18 @@
 services:
+  app:
+    build:
+      context: .
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    depends_on:
+      - db
+      - redis
+
   db:
     image: postgres
     env_file:
@@ -6,5 +20,24 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ./db:/var/lib/postgresql
+      - ./db:/var/lib/postgresql/data
     restart: on-failure
+
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+
+  celery:
+    build:
+      context: .
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+
+    restart: on-failure
+    command: sh -c "celery -A configs worker -l info -B"
+    depends_on:
+      - db
+      - redis
